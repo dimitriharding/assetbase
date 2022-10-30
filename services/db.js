@@ -20,6 +20,7 @@ import {
     serverTimestamp,
 } from "firebase/firestore";
 import { firebaseApp } from "./firebase";
+import { uploadFile } from './storage'
 
 // Initialize Firestore
 const db = getFirestore(firebaseApp);
@@ -141,7 +142,118 @@ export function useAssets() {
     );
 }
 
+/** Manage Models */
+
+export function createModel(data) {
+    if (data.image) {
+        return uploadFile(data.image).then((url) => {
+            return addDoc(collection(db, "models"), {
+                ...data,
+                image: url,
+                createdAt: serverTimestamp(),
+                createdBy: "admin",
+            });
+        });
+    } else {
+        return addDoc(collection(db, "models"), {
+            ...data,
+            createdAt: serverTimestamp(),
+            createdBy: "admin",
+        });
+    }
+}
+
+export function updateModel(id, data) {
+    return updateDoc(doc(db, "models", id), data);
+}
+
+export function deleteModel(id) {
+    return deleteDoc(doc(db, "models", id));
+}
+
+/** Subscribe to models */
+export function useModels() {
+    return useQuery(
+        ["models"],
+        createQuery(() => collection(db, "models")),
+        { enabled: true }
+    );
+}
+
+// Subscribe to a single model
+export function useModel(id) {
+    return useQuery(
+        ["model", { id }],
+        createQuery(() => doc(db, "models", id)),
+        { enabled: !!id }
+    );
+}
+
+/** Manage Manufactures */
+
+export function createManufacture(data) {
+    return addDoc(collection(db, "manufactures"), {
+        ...data,
+        createdAt: serverTimestamp(),
+        createdBy: "admin",
+    });
+}
+
+export function updateManufacture(id, data) {
+    return updateDoc(doc(db, "manufactures", id), data);
+}
+
+export function deleteManufacture(id) {
+    return deleteDoc(doc(db, "manufactures", id));
+}
+
+/** Subscribe to manufactures */
+export function useManufactures() {
+    return useQuery(
+        ["manufactures"],
+        createQuery(() => collection(db, "manufactures")),
+        { enabled: true }
+    );
+}
+
+// Subscribe to a single manufacture
+export function useManufacture(id) {
+    return useQuery(
+        ["manufacture", { id }],
+        createQuery(() => doc(db, "manufactures", id)),
+        { enabled: !!id }
+    );
+}
+
+
+
 /**** HELPERS ****/
+
+export function useDocument(documentName) {
+    return {
+        create: (data) => addDoc(collection(db, documentName), {
+            ...data,
+            createdAt: serverTimestamp(),
+            createdBy: "admin",
+        }),
+        update: (id, data) => updateDoc(doc(db, documentName, id), {
+            ...data,
+            updatedAt: serverTimestamp(),
+            updatedBy: "admin",
+        }),
+        delete: (id) => deleteDoc(doc(db, documentName, id)),
+        useList: () => useQuery(
+            [documentName],
+            createQuery(() => collection(db, documentName)),
+            { enabled: true }
+        ),
+        useById: (id) => useQuery(
+            [documentName, { id }],
+            createQuery(() => doc(db, documentName, id)),
+            { enabled: !!id }
+        ),
+    }
+};
 
 // Store Firestore unsubscribe functions
 const unsubs = {};
