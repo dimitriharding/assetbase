@@ -89,6 +89,9 @@ const AssetsList = ({
       header: "",
     }),
   ];
+
+  if (!data) return null;
+
   if (data.length === 0) {
     return (
       <Flex mt={100}>

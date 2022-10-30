@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { Form, FormLayout, Field, SubmitButton } from "@saas-ui/react";
 import { Flex } from "@chakra-ui/react";
 import { FileInputField } from "../../../../components/FileInputField";
-import SimpleFormDialog from "../../../../components/SimpleFormDialog";
+import SimpleFormDialog from "../../../../components/common/SimpleFormDialog";
 import { manufacturerSchema, categorySchema } from "../../../../lib/schemas";
 import { createModel, useDocument } from "../../../../services/db";
 import useNotification from "../../../../components/common/useNotification";

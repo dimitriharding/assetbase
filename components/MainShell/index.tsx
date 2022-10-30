@@ -28,6 +28,8 @@ import {
   HiOutlineCog6Tooth,
 } from "react-icons/hi2";
 
+import Landing from "../Landing";
+
 const MainShell: NextPage<{ children: ReactElement }> = ({ children }) => {
   const router = useRouter();
   // render home page or AppShell
@@ -104,6 +106,11 @@ const MainShell: NextPage<{ children: ReactElement }> = ({ children }) => {
                 href="/settings/categories"
                 isActive={router.pathname.includes("/settings/categories")}
               />
+              <NavItem
+                label="Statuses"
+                href="/settings/statuses"
+                isActive={router.pathname.includes("/settings/statuses")}
+              />
             </NavGroup>
           </SidebarSection>
         </Sidebar>
@@ -112,6 +119,7 @@ const MainShell: NextPage<{ children: ReactElement }> = ({ children }) => {
       {children}
     </AppShell>
   );
+  // return <Landing />;
 };
 
 export default MainShell;
